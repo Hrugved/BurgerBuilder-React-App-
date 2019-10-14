@@ -1,8 +1,6 @@
 import React, {Component} from 'react'
 import classes from './BurgerIngredient.module.css'
-import BurgerBuilder from '../../../containers/BurgerBuilder/BurgerBuilder';
 import PropTypes from 'prop-types'
-import { binaryExpression } from '@babel/types';
 
 class BurgerIngredient extends Component {
     render() {
@@ -47,7 +45,7 @@ class BurgerIngredient extends Component {
 }
 
 BurgerIngredient.propTypes = {
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired // ensures a warning is prop 'type' is not a string or not provided at all
 }
 
-export default BurgerBuilder
+export default BurgerIngredient
