@@ -4,7 +4,6 @@ import Backdrop from '../Backdrop/Backdrop'
 import Auxillary from '../../../hoc/Auxillary'
 
 const Modal = (props) => {
-
     return (
         <Auxillary>
             <Backdrop show={props.show} clicked={props.backdropClicked}/>
