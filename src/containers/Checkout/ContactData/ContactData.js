@@ -3,47 +3,50 @@ import Button from '../../../components/UI/Button/Button'
 import classes from './ContactData.module.css'
 import axios from '../../../axios-orders'
 import Spinner from '../../../components/UI/spinner/spinner'
+import Input from '../../../components/UI/Input/Input'
 
 class ContactData extends Component {
     
+    configElement = (elementType,type,placeholder,value,options) => {
+        return ({
+            elementType,
+            elementConfig: {
+                type,
+                placeholder,
+                options
+            },
+            value
+        })
+    } 
+
     state = {
-        name: '',
-        email:'',
-        address: {
-            street:'',
-            postalCode:''
+        orderForm : {
+            name: this.configElement('input','text','your name','',null),
+            street: this.configElement('input','text','street','',null),
+            zipcode: this.configElement('input','text','zipcode','',null),
+            country: this.configElement('input','text','Country name','',null),
+            email: this.configElement('input','email','your Email','',null),
+            deliveryMethod: this.configElement('select',null,null,null,[
+                {value: 'fastest', displayValue: 'Fastest'},
+                {value: 'Cheapest', displayValue: 'Cheapest'} 
+            ]),
         },
         loading: false
     }
 
     orderHandler = (event) => {
+        // the default behaviour of submitting form is it sends request and hence our page is reloaded(instead we want to do this in background)
         event.preventDefault()
         this.setState({loading: true})
-        const order = {
-            ingredients: this.props.ingredients,
-            price: this.props.price,
-            customer:{
-                name: 'lindsey',
-                address: {
-                    street: 'pensylvinia',
-                    zipcode: '208106',
-                    country: 'USA'
-                },
-                email: 'leigh@gmail.com'
-            },
-            deliveryMethod: 'fastest'
-        }
+        const orderForm = this.state.orderForm
+        const order = {}
+        Object.keys(orderForm).forEach(key => {
+            order[key] = orderForm[key].value
+        })
+        console.log(order)
         axios.post('/orders.json', order) 
             .then(res => {
                 this.setState({loading: false})
-                // // this.setState({loading:false, purchasing: false, purchased:true})
-                // console.log(this.props)
-                // // this.props.history.push('/checkout')
-                // this.props.history.push({
-                //     pathname: '/checkout',
-                //     state: this.state.ingredients
-                // })
-                // console.log('success')
             })
             .catch(e => {
                 this.setState({loading:false})
@@ -52,14 +55,31 @@ class ContactData extends Component {
         console.log(this.props.ingredients)
     }
 
+    inputChangeHandler = (inputIdentifier,event) => {
+        const updatedInputForm = {...this.state.orderForm}
+        const updatedInputElement = {...updatedInputForm[inputIdentifier]}
+        updatedInputElement.value = event.target.value
+        updatedInputForm[inputIdentifier] = updatedInputElement
+        this.setState({orderForm: updatedInputForm})
+    }
+
     render() {
+        const formElements = Object.keys(this.state.orderForm).map(key => {
+            const obj = this.state.orderForm[key]
+            return(
+                <Input elementType={obj.elementType} 
+                    elementConfig={obj.elementConfig}  
+                    value={obj.value}  
+                    key={key}
+                    changed={(event) => this.inputChangeHandler(key,event)}    
+                />
+            )
+        }) 
+
         let form = (
-            <form>
-                <input type='text' name='name' placeholder='Your Name' />
-                <input type='email' name='email' placeholder='Your Email' />
-                <input type='text' name='street' placeholder='Street' />
-                <input type='text' name='postalCode' placeholder='Postal code' />
-                <Button type="Success" clicked={this.orderHandler}>ORDER</Button>
+            <form onSubmit={this.orderHandler}>
+                {formElements}
+                <Button type="Success">ORDER</Button>
             </form>)
         if(this.state.loading) {
             form = <Spinner />
