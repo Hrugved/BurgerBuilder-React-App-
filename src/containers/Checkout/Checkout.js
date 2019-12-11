@@ -52,7 +52,7 @@ class Checkout extends Component {
                     render={(props) => <ContactData 
                                     {...props}
                                     ingredients={this.state.ingredients} 
-                                    price={this.state.price}
+                                    price={parseInt(this.state.price).toFixed(2)}
                                     />} />
             </div>
         )

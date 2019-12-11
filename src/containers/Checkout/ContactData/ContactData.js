@@ -4,6 +4,7 @@ import classes from './ContactData.module.css'
 import axios from '../../../axios-orders'
 import Spinner from '../../../components/UI/spinner/spinner'
 import Input from '../../../components/UI/Input/Input'
+
 class ContactData extends Component {
     
     configElement = (elementType,type,placeholder,value,options,validation,isValid) => {
@@ -53,10 +54,15 @@ class ContactData extends Component {
         event.preventDefault()
         this.setState({loading: true})
         const orderForm = this.state.orderForm
-        const order = {}
+        const order = {
+            ingredients: this.props.ingredients,
+            price: this.props.price,
+            customer : {}
+        }
         Object.keys(orderForm).forEach(key => {
-            order[key] = orderForm[key].value
+            order.customer[key] = orderForm[key].value
         })
+        console.log('order', order)
         axios.post('/orders.json', order) 
             .then(res => {
                 this.setState({loading: false})

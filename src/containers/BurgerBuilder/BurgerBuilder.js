@@ -8,6 +8,7 @@ import axios from '../../axios-orders'
 import Spinner from '../../components/UI/spinner/spinner'
 import WithErrorHandler from '../../WithErrorHandler/WithErrorHandler'
 import {withRouter} from 'react-router-dom'
+import classes from './BurgerBuilder.module.css'
 
 const INGREDIENT_PRICES = {
     salad: .5,
@@ -100,7 +101,8 @@ class BurgerBuilder extends Component {
             />
 
             burger = (
-                <Auxillary>
+                // <Auxillary className={classes.aux}>
+                <div className={classes.container}>
                     <Burger ingredients={this.state.ingredients}/>
                     <BuildControls 
                         ingredientsAdded={this.addIngredientHandler} 
@@ -110,7 +112,8 @@ class BurgerBuilder extends Component {
                         purchasable={this.state.purchasable}
                         purchasing={this.purchasingHandler}
                     />
-                </Auxillary>
+                </div>
+                // </Auxillary>
             )
         }
 
